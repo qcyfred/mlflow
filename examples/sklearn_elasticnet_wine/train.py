@@ -29,6 +29,15 @@ def eval_metrics(actual, pred):
 
 
 if __name__ == "__main__":
+
+    # 设置实验保存路径    
+    run_file_path = '/home/omaka_shared/qcy/mlruns'
+    uri = f'file://{run_file_path}'
+    mlflow.set_tracking_uri(uri)
+    
+    tracking_uri = mlflow.get_tracking_uri()
+    print("Current tracking uri: {}".format(tracking_uri))
+
     warnings.filterwarnings("ignore")
     np.random.seed(40)
 
@@ -55,7 +64,13 @@ if __name__ == "__main__":
     alpha = float(sys.argv[1]) if len(sys.argv) > 1 else 0.5
     l1_ratio = float(sys.argv[2]) if len(sys.argv) > 2 else 0.5
 
-    with mlflow.start_run():
+    # 首次创建实验时，需要初始化创建实验
+    # experiment_id = mlflow.create_experiment("experiment1")
+    # print(experiment_id)
+
+    with mlflow.start_run(
+        # experiment_id=experiment_id,
+    ):
         lr = ElasticNet(alpha=alpha, l1_ratio=l1_ratio, random_state=42)
         lr.fit(train_x, train_y)
 
