@@ -31,9 +31,16 @@ def eval_metrics(actual, pred):
 if __name__ == "__main__":
 
     # 设置实验保存路径    
+    # 存在本地文件
     run_file_path = '/home/omaka_shared/qcy/mlruns'
     uri = f'file://{run_file_path}'
     mlflow.set_tracking_uri(uri)
+
+    # 通过http存到远端
+    # run_file_path = '/home/omaka_shared/qcy/mlruns'
+    # uri = f'file://{run_file_path}'
+    # uri = "http://172.17.16.13:1234" # 一定要用db，才能注册模型？
+    # mlflow.set_tracking_uri(uri)
     
     tracking_uri = mlflow.get_tracking_uri()
     print("Current tracking uri: {}".format(tracking_uri))
@@ -67,6 +74,8 @@ if __name__ == "__main__":
     # 首次创建实验时，需要初始化创建实验
     # experiment_id = mlflow.create_experiment("experiment1")
     # print(experiment_id)
+    
+    mlflow.set_experiment("/my-experiment") # 直接设置实验（没有就会自动创建！）
 
     with mlflow.start_run(
         # experiment_id=experiment_id,
@@ -100,4 +109,6 @@ if __name__ == "__main__":
             # https://mlflow.org/docs/latest/model-registry.html#api-workflow
             mlflow.sklearn.log_model(lr, "model", registered_model_name="ElasticnetWineModel")
         else:
-            mlflow.sklearn.log_model(lr, "model")
+            model_info = mlflow.sklearn.log_model(lr, "model")
+            print(model_info.model_uri)
+            print(1)
