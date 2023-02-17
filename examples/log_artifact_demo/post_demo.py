@@ -24,7 +24,7 @@
 # if __name__ == "__main__":
 #     exp_name = 'testname4'
 #     mlflow.create_experiment(exp_name, artifact_location='ftp://u1:u1@localhost/ftp/artifact')
-#     # mlflow.create_experiment(exp_name, artifact_location='ftp://u1:u1@localhost/ftp/artifact')
+    # mlflow.create_experiment(exp_name, artifact_location='ftp://u1:u1@localhost/ftp/artifact')
 #     mlflow.set_tracking_uri("http://localhost:1234")
 #     mlflow.set_experiment(exp_name)
 #     mlflow.log_param("param1", randint(0, 100))
@@ -34,15 +34,25 @@
 #
 import mlflow
 
-remote_server_uri = "http://localhost:1234"  # set to your server URI
+remote_server_uri = "http://192.168.2.254:1234/"  # set to your server URI
 mlflow.set_tracking_uri(remote_server_uri)
 # Note: on Databricks, the experiment name passed to mlflow_set_experiment must be a
 # valid path in the workspace
-mlflow.set_experiment("/my-experiment")
+mlflow.set_experiment("/my-experiment1")
+
+experiment = mlflow.get_experiment_by_name('/my-experiment1')
+
+print("Name: {}".format(experiment.name))
+print("Experiment_id: {}".format(experiment.experiment_id))
+print("Artifact Location: {}".format(experiment.artifact_location))
+print("Tags: {}".format(experiment.tags))
+print("Lifecycle_stage: {}".format(experiment.lifecycle_stage))
+
 with mlflow.start_run():
     mlflow.log_param("a", 1)
     mlflow.log_metric("b", 2)
     mlflow.log_artifact("test.txt")  # File contains "Hello world!"
+    # mlflow.log_artifact("test.txt")  # File contains "Hello world!"
 
     """
     exp = mlflow.get_experiment_by_name('/my-experiment')
